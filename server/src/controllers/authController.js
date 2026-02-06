@@ -27,12 +27,12 @@ export const login = async (req, res) => {
 
     try {
         const user = await prisma.user.findUnique({ where: { name } });
-        if (!user) return res.status(404).json({ error: "Utilisateur non trouvé" });
+        if (!user) return res.status(404).json({ error: "incorrect name/password" });
 
         const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(401).json({ error: "Mot de passe incorrect" });
+        if (!isMatch) return res.status(401).json({ error: "incorrect name/password" });
 
-        res.status(200).json({ message: "Connexion réussie", userId: user.id });
+        res.status(200).json({ userId: user.id });
     } catch (error) {
         res.status(500).json({ error: "Erreur serveur" });
     }
