@@ -5,7 +5,7 @@ function WishList() {
     return (
         <Layout>
             <h1 className="text-3xl font-bold text-red-900 mb-6">
-                Wish List
+                Bank
             </h1>
             
             <div className="bg-white p-6 rounded-xl shadow-sm border border-red-100">

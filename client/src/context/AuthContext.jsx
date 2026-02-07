@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import apiClient from "../controller/apiClient";
+import { authService } from "../controller/authService";
 
 const Context = React.createContext(null)
 
@@ -7,23 +9,37 @@ const ProviderWrapper = (props) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            // need : verify toke in backend
-            setUser({ token }); 
-        }
-        setLoading(false);
+        const initAuth = async () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    const response = await authService.getme();
+                    setUser(response.data);
+                } catch (error) {
+                    localStorage.removeItem('token');
+                    setUser(null);
+                }
+            }
+            setLoading(false);
+        };
+
+        initAuth();
     }, []);
 
-    const login = async (email, password) => {
-        // need use backend
-        console.log("Login avec", email);
-        console.log("Login avec", password);
-        const fakeToken = "token_jwt_exemple_123456";
-        localStorage.setItem('token', fakeToken);
-        setUser({ email, token: fakeToken });
-        
-        return true;
+    const login = async (name, password) => {
+        try {
+            const data = await authService.login(name, password);
+            
+            if (data.token) {
+                localStorage.setItem('token', data.token);
+            }
+
+            setUser(data.user || { name, token: data.token });
+            return true;
+        } catch (error) {
+            console.error("Erreur de login:", error);
+            return false;
+        }
     };
 
     const logout = () => {
