@@ -154,3 +154,40 @@ export const getExpensesByCategory = async (req, res) => {
         res.status(500).json({ error: "Erreur lors du calcul par catégorie" });
     }
 };
+
+export const updateTransaction = async (req, res) => {
+    const { id } = req.params;
+    const userId = req.user.userId;
+    const { amount, type, description, category, date } = req.body;
+
+    try {
+        const existingTransaction = await prisma.transaction.findFirst({
+            where: {
+                id: parseInt(id),
+                userId: userId
+            }
+        });
+
+        if (!existingTransaction) {
+            return res.status(404).json({ error: "Transaction introuvable ou non autorisée" });
+        }
+
+        const updatedTransaction = await prisma.transaction.update({
+            where: {
+                id: parseInt(id)
+            },
+            data: {
+                amount: parseFloat(amount),
+                type,
+                description,
+                category,
+                date: date ? new Date(date) : undefined
+            }
+        });
+
+        res.status(200).json(updatedTransaction);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erreur lors de la modification" });
+    }
+};

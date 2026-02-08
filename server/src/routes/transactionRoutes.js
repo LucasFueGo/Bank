@@ -4,7 +4,8 @@ import {
     getTransactions, 
     getMonthlyStats, 
     createTransaction,
-    getExpensesByCategory
+    getExpensesByCategory,
+    updateTransaction
 } from '../controllers/transactionController.js';
 import { authenticateToken } from '../middleware/authMiddleware.js';
 
@@ -17,6 +18,7 @@ router.get('/', getTransactions);
 router.get('/stats', getMonthlyStats);
 router.get('/categories', getExpensesByCategory);
 router.post('/', createTransaction);
+router.put('/:id', updateTransaction);
 
 
 export default router;
