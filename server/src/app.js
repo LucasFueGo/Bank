@@ -9,9 +9,30 @@ dotenv.config();
 
 const app = express();
 
+const allowedOrigins = [
+    process.env.ORIGIN,                      
+    'https://bank-drab-seven.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:3000'
+];
+
 app.use(cors({
-    origin: [process.env.ORIGIN, 'http://localhost:5173'],
-    credentials: true
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        const cleanOrigin = origin.replace(/\/$/, "");
+        const isAllowed = allowedOrigins.some(o => o && o.replace(/\/$/, "") === cleanOrigin);
+
+        if (isAllowed) {
+            callback(null, true);
+        } else {
+            console.log("🚫 BLOQUÉ PAR CORS. Origine reçue :", origin);
+            console.log("✅ Origines acceptées :", allowedOrigins);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(express.json());
