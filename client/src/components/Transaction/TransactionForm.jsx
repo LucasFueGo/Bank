@@ -2,14 +2,27 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
 import { transactionService } from '@/controller/transactionService';
+import { groupService } from '@/controller/groupService';
 
 const TransactionForm = ({ onSuccess, initialData = null }) => {
     const [amount, setAmount] = useState('');
     const [type, setType] = useState('DEPENSE');
     const [description, setDescription] = useState('');
     const [category, setCategory] = useState('AUTRE');
-    const [date, setDate] = useState(new Date().toISOString().split('T')[0])
+    const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+    const [groupId, setGroupId] = useState('');
+    const [groups, setGroups] = useState([]);
     const [error, setError] = useState('');
+
+    useEffect(() => {
+        const loadGroups = async () => {
+            try {
+                const data = await groupService.getAll();
+                setGroups(data);
+            } catch (err) { console.error(err); }
+        };
+        loadGroups();
+    }, []);
 
     useEffect(() => {
         if (initialData) {
@@ -18,6 +31,7 @@ const TransactionForm = ({ onSuccess, initialData = null }) => {
             setDescription(initialData.description);
             setCategory(initialData.category);
             setDate(new Date(initialData.date).toISOString().split('T')[0]);
+            setGroupId(initialData.groupId ? initialData.groupId.toString() : '');
         }
     }, [initialData]);
 
@@ -30,7 +44,8 @@ const TransactionForm = ({ onSuccess, initialData = null }) => {
             type,
             category,
             date: new Date(date).toISOString(),
-            description
+            description,
+            groupId: groupId ? parseInt(groupId) : null
         };
 
         try {
@@ -81,7 +96,7 @@ const TransactionForm = ({ onSuccess, initialData = null }) => {
                     />
                 </div>
 
-                {/* CHAMP Date */}
+                {/* CHAMP DATE */}
                 <div className="space-y-1">
                     <label className="text-sm font-medium text-gray-700 ml-1">
                         Date
@@ -110,7 +125,7 @@ const TransactionForm = ({ onSuccess, initialData = null }) => {
                     </select>
                 </div>
 
-                {/* CHAMP Catégory */}
+                {/* CHAMP CATEGORY */}
                 <div className="space-y-1">
                     <label className="text-sm font-medium text-gray-700 ml-1">
                         Catégorie
@@ -126,6 +141,21 @@ const TransactionForm = ({ onSuccess, initialData = null }) => {
                         <option value="TRANSPORT">Transport</option>
                         <option value="SALAIRE">Salaire</option>
                         <option value="AUTRE">Autre</option>
+                    </select>
+                </div>
+
+                {/* CHAMP GROUP */}
+                <div className="space-y-1">
+                    <label className="text-sm font-medium text-gray-700 ml-1">Groupe (Optionnel)</label>
+                    <select 
+                        value={groupId}
+                        onChange={(e) => setGroupId(e.target.value)}
+                        className="w-full px-4 py-2 border rounded-md bg-white"
+                    >
+                        <option value="">Aucun groupe</option>
+                        {groups.map(g => (
+                            <option key={g.id} value={g.id}>{g.name}</option>
+                        ))}
                     </select>
                 </div>
 

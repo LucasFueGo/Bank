@@ -165,8 +165,7 @@ export const updateTransaction = async (req, res) => {
         const existingTransaction = await prisma.transaction.findFirst({
             where: {
                 id: parseInt(id),
-                userId: userId,
-                groupId: groupId ? parseInt(groupId) : null,
+                userId: userId
             }
         });
 
@@ -183,7 +182,8 @@ export const updateTransaction = async (req, res) => {
                 type,
                 description,
                 category,
-                date: date ? new Date(date) : undefined
+                date: date ? new Date(date) : undefined,
+                groupId: groupId ? parseInt(groupId) : null
             }
         });
 

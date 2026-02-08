@@ -4,6 +4,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from '@/components/Dashboard/Dashboard'
 import Stats from '@/components/Transaction/Stats'
 import Auth from '@/components/Auth/Login';
+import GroupsList from './components/Group/GroupsList';
+import GroupDetail from './components/Group/GroupDetail';
 
 function App() {
   const { user } = useContext(Context);
@@ -25,6 +27,14 @@ function App() {
       <Route 
         path="/stats" 
         element={user ? <Stats /> : <Navigate to="/Auth" />}
+      />
+      <Route 
+        path="/groups" 
+        element={user ? <GroupsList /> : <Navigate to="/Auth" />}
+      />
+      <Route 
+        path="/groups/:id" 
+        element={user ? <GroupDetail /> : <Navigate to="/Auth" />}
       />
     </Routes>
   )

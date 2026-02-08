@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import { Context } from '@/context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
-import { Menu, X, LogOut, PieChart, Users } from 'lucide-react';
+import { Menu, X, LogOut, PieChart, Users, Folder } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 function Header() {
@@ -11,7 +11,8 @@ function Header() {
 
     const menuItems = [
         { label: "Dashboard", icon: Users, href: "/" }, 
-        { label: "Statistiques", icon: PieChart, href: "/stats" }
+        { label: "Statistiques", icon: PieChart, href: "/stats" },
+        { label: "Groupes", icon: Folder, href: "/groups" }
     ];
 
     const handleLogout = () => {
