@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { transactionService } from '@/controller/transactionService';
 
-const TransactionsList = ({ refreshTrigger, filterDate }) => {
+const TransactionsList = ({ refreshTrigger, month, year }) => {
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -9,7 +9,10 @@ const TransactionsList = ({ refreshTrigger, filterDate }) => {
     const fetchTransactions = async () => {
         try {
             setLoading(true);
-            const data = await transactionService.getAll();
+            const data = await transactionService.get({
+                month: month,
+                year: year
+            });
             setTransactions(data);
         } catch (err) {
             setError("Impossible de charger les transactions.");
@@ -21,17 +24,7 @@ const TransactionsList = ({ refreshTrigger, filterDate }) => {
 
     useEffect(() => {
         fetchTransactions();
-    }, [refreshTrigger]);
-
-    const filteredTransactions = transactions.filter((t) => {
-        if (!filterDate || filterDate === 'all') return true;
-
-        const tDate = new Date(t.date);
-        const fDate = new Date(filterDate);
-
-        return tDate.getMonth() === fDate.getMonth() && 
-               tDate.getFullYear() === fDate.getFullYear();
-    });
+    }, [refreshTrigger, month, year]);
 
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('fr-FR', {
@@ -39,11 +32,9 @@ const TransactionsList = ({ refreshTrigger, filterDate }) => {
         });
     };
 
-    if (loading) return <div className="text-center p-4 text-gray-500">Chargement...</div>;
-    if (error) return <div className="text-center p-4 text-red-500">{error}</div>;
-    // if (transactions.length === 0) return <div className="text-center p-4 text-gray-400">Aucune transaction pour le moment.</div>;
-
-    if (filteredTransactions.length === 0) return <div className="text-center p-4 text-gray-400">Aucune transaction pour cette période.</div>;
+    if (loading) return <div className="text-center p-8 text-gray-500">Chargement...</div>;
+    if (error) return <div className="text-center p-8 text-red-500">{error}</div>;
+    if (transactions.length === 0) return <div className="text-center p-8 text-gray-400">Aucune transaction pour cette période.</div>;
 
     return (
         <div className="overflow-x-auto">
@@ -51,9 +42,7 @@ const TransactionsList = ({ refreshTrigger, filterDate }) => {
                 <thead className="bg-gray-50 text-gray-600 text-sm uppercase">
                     <tr>
                         <th className="py-3 px-4">Description</th>
-                        
                         <th className="py-3 px-4 hidden sm:table-cell">Date</th>
-                        
                         <th className="py-3 px-4 text-right">Montant</th>
                     </tr>
                 </thead>

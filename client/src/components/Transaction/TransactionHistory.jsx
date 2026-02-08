@@ -1,49 +1,93 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TransactionsList from './TransactionsList';
+import { transactionService } from '@/controller/transactionService';
 
 const TransactionHistory = ({ refreshTrigger }) => {
-    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [month, setMonth] = useState(new Date().getMonth() + 1);
+    const [year, setYear] = useState(new Date().getFullYear());
+    
+    const [stats, setStats] = useState({ income: 0, expense: 0, balance: 0 });
 
-    const getMonthOptions = () => {
-        const options = [];
-        const today = new Date();
-        for (let i = 0; i < 12; i++) {
-            const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
-            options.push(d);
-        }
-        return options;
-    };
+    const years = Array.from({ length: 5 }, (_, i) => 2024 + i);
+    
+    const months = [
+        { value: 1, label: 'Janvier' },
+        { value: 2, label: 'Février' },
+        { value: 3, label: 'Mars' },
+        { value: 4, label: 'Avril' },
+        { value: 5, label: 'Mai' },
+        { value: 6, label: 'Juin' },
+        { value: 7, label: 'Juillet' },
+        { value: 8, label: 'Août' },
+        { value: 9, label: 'Septembre' },
+        { value: 10, label: 'Octobre' },
+        { value: 11, label: 'Novembre' },
+        { value: 12, label: 'Décembre' },
+    ];
 
-    const handleMonthChange = (e) => {
-        setSelectedDate(new Date(e.target.value));
-    };
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const data = await transactionService.getStats(month, year);
+                setStats(data);
+            } catch (error) {
+                console.error("Erreur chargement stats:", error);
+            }
+        };
 
-    const formatMonthOption = (date) => {
-        return date.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
-    };
+        fetchStats();
+    }, [month, year, refreshTrigger]);
 
     return (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="p-6 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <h2 className="text-lg font-semibold text-gray-700">Historique récent</h2>
+            
+            <div className="p-6 border-b border-gray-100 flex flex-col gap-4">
                 
-                <select 
-                    value={selectedDate.toISOString()} 
-                    onChange={handleMonthChange}
-                    className="block w-full sm:w-auto rounded-md border-gray-300 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6 capitalize cursor-pointer"
-                >
-                    {getMonthOptions().map((date) => (
-                        <option key={date.toISOString()} value={date.toISOString()}>
-                            {formatMonthOption(date)}
-                        </option>
-                    ))}
-                    <option value="all">Tout voir</option>
-                </select>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <h2 className="text-lg font-semibold text-gray-700">Historique</h2>
+                    
+                    <div className="flex gap-2">
+                        {/* Select MOIS */}
+                        <select 
+                            value={month} 
+                            onChange={(e) => setMonth(parseInt(e.target.value))}
+                            className="block rounded-md border-gray-300 py-1.5 pl-3 pr-8 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-primary sm:text-sm sm:leading-6 cursor-pointer"
+                        >
+                            {months.map((m) => (
+                                <option key={m.value} value={m.value}>{m.label}</option>
+                            ))}
+                        </select>
+
+                        {/* Select ANNÉE */}
+                        <select 
+                            value={year} 
+                            onChange={(e) => setYear(parseInt(e.target.value))}
+                            className="block rounded-md border-gray-300 py-1.5 pl-3 pr-8 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-primary sm:text-sm sm:leading-6 cursor-pointer"
+                        >
+                            {years.map((y) => (
+                                <option key={y} value={y}>{y}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+
+                {/* --- STATISTIQUES --- */}
+                <div className="grid grid-cols-3 gap-2 sm:gap-8 pt-2">
+                    <div className="flex flex-col">
+                        <span className="text-xs text-gray-500 uppercase font-medium">Revenus</span>
+                        <span className="text-emerald-600 font-bold text-lg">+{stats.income.toFixed(2)} €</span>
+                    </div>
+                    <div className="flex flex-col">
+                        <span className="text-xs text-gray-500 uppercase font-medium">Dépenses</span>
+                        <span className="text-red-500 font-bold text-lg">-{stats.expense.toFixed(2)} €</span>
+                    </div>
+                </div>
             </div>
             
             <TransactionsList 
                 refreshTrigger={refreshTrigger} 
-                filterDate={selectedDate}
+                month={month}
+                year={year}
             />
         </div>
     );

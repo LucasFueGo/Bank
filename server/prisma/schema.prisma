@@ -20,6 +20,7 @@ model Transaction {
   id          Int             @id @default(autoincrement())
   amount      Float
   type        TransactionType
+  category    TransactionCategory @default(AUTRE)
   description String
   date        DateTime        @default(now())
   userId      Int
@@ -29,4 +30,13 @@ model Transaction {
 enum TransactionType {
   GAIN
   DEPENSE
+}
+
+enum TransactionCategory {
+  NOURRITURE
+  LOISIR
+  JEU
+  TRANSPORT
+  SALAIRE
+  AUTRE
 }

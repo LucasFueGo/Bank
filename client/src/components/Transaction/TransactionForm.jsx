@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
 import { transactionService } from '@/controller/transactionService';
 
 const TransactionForm = ({ onSuccess }) => {
-    // const navigate = useNavigate();
-
     const [amount, setAmount] = useState('');
     const [type, setType] = useState('DEPENSE');
     const [description, setDescription] = useState('');
+    const [category, setCategory] = useState('AUTRE');
+    const [date, setDate] = useState(new Date().toISOString().split('T')[0])
     const [error, setError] = useState('');
 
     const handleSubmit = async(e) => {
@@ -20,6 +19,8 @@ const TransactionForm = ({ onSuccess }) => {
             await transactionService.create({
                 amount: parseFloat(amount),
                 type,
+                category,
+                date: new Date(date).toISOString(),
                 description
             });
             if (onSuccess) {
@@ -57,6 +58,20 @@ const TransactionForm = ({ onSuccess }) => {
                     />
                 </div>
 
+                {/* CHAMP Date */}
+                <div className="space-y-1">
+                    <label className="text-sm font-medium text-gray-700 ml-1">
+                        Date
+                    </label>
+                    <input 
+                        type="date"
+                        required
+                        className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all text-gray-700"
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                    />
+                </div>
+
                 {/* CHAMP TYPE */}
                 <div className="space-y-1">
                     <label className="text-sm font-medium text-gray-700 ml-1">
@@ -69,6 +84,25 @@ const TransactionForm = ({ onSuccess }) => {
                     >
                         <option value="DEPENSE">Dépense</option>
                         <option value="GAIN">Gain</option>
+                    </select>
+                </div>
+
+                {/* CHAMP Catégory */}
+                <div className="space-y-1">
+                    <label className="text-sm font-medium text-gray-700 ml-1">
+                        Catégorie
+                    </label>
+                    <select 
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value)}
+                        className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-primary outline-none bg-white"
+                    >
+                        <option value="NOURRITURE">Nourriture</option>
+                        <option value="LOISIR">Loisir</option>
+                        <option value="JEU">Jeu</option>
+                        <option value="TRANSPORT">Transport</option>
+                        <option value="SALAIRE">Salaire</option>
+                        <option value="AUTRE">Autre</option>
                     </select>
                 </div>
 

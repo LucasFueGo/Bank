@@ -20,17 +20,15 @@ export const getAllTransactions = async (req, res) => {
 
 export const createTransaction = async (req, res) => {
     const userId = req.user.userId;
-    const { amount, type, description, date} = req.body;
-    console.log(userId);
-    console.log(amount);
-    console.log(type);
-    console.log(description);
+    const { amount, type, description, category, date} = req.body;
     try {
         const newTransaction = await prisma.transaction.create({
             data: {
                 amount: parseFloat(amount),
                 type: type,
                 description: description,
+                category: category || 'AUTRE',
+                date: date ? new Date(date) : new Date(),
                 userId: userId,
             }
         });

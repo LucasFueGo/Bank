@@ -10,6 +10,28 @@ export const transactionService = {
         }
     },
 
+    get: async (filters = {}) => {
+        try {
+            const response = await apiClient.get('/transactions', { 
+                params: filters 
+            });
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || { error: "Impossible de charger les transactions" };
+        }
+    },
+
+    getStats: async (month, year) => {
+        try {
+            const response = await apiClient.get('/transactions/stats', {
+                params: { month, year }
+            });
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || { error: "Impossible de charger les statistiques" };
+        }
+    },
+
     create: async (transactionData) => {
         try {
             const response = await apiClient.post('/transactions', transactionData);

@@ -41,7 +41,7 @@ GET http://localhost:3000/api/transactions
 Authorization: Bearer {{authToken}}
 
 ### Récupérer les transactions de Février 2026
-GET http://localhost:3000/api/transactions?month=2&year=2026
+GET http://localhost:3000/api/transactions?month=1&year=2026
 Authorization: Bearer {{authToken}}
 
 
