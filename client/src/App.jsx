@@ -6,6 +6,7 @@ import Stats from '@/components/Transaction/Stats'
 import Auth from '@/components/Auth/Login';
 import GroupsList from './components/Group/GroupsList';
 import GroupDetail from './components/Group/GroupDetail';
+import GroupStats from './components/Group/GroupStats';
 
 function App() {
   const { user } = useContext(Context);
@@ -35,6 +36,10 @@ function App() {
       <Route 
         path="/groups/:id" 
         element={user ? <GroupDetail /> : <Navigate to="/Auth" />}
+      />
+      <Route 
+        path="/groups/:id/stats" 
+        element={user ? <GroupStats /> : <Navigate to="/Auth" />} 
       />
     </Routes>
   )

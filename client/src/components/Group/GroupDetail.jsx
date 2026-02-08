@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '@/components/Layout/Layout';
 import { groupService } from '@/controller/groupService';
 import { Button } from '@/components/ui/Button';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, PieChart } from 'lucide-react'
 
 const GroupDetail = () => {
     const { id } = useParams();
@@ -33,6 +33,16 @@ const GroupDetail = () => {
                     Retour aux groupes
                 </Button>
             </div>
+
+            {/* BOUTON STATS */}
+            <Button 
+                onClick={() => navigate(`/groups/${id}/stats`)}
+                variant="outline"
+                className="flex items-center gap-2"
+            >
+                <PieChart className="h-4 w-4" />
+                Statistiques
+            </Button>
 
             <div className="flex items-center gap-4 mb-6">
                 <h1 className="text-3xl font-bold">{group.name}</h1>

@@ -12,5 +12,9 @@ export const groupService = {
     create: async (data) => {
         const res = await apiClient.post('/groups', data);
         return res.data;
+    },
+    getStats: async (id) => {
+        const res = await apiClient.get(`/groups/${id}/stats`);
+        return res.data;
     }
 };

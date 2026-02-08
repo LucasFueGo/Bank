@@ -1,23 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { transactionService } from '@/controller/transactionService';
+import { groupService } from '@/controller/groupService';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
 
-const CategoryChart = ({ month, year, refreshTrigger }) => {
+const CategoryChart = ({ month, year, groupId, refreshTrigger }) => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const stats = await transactionService.getCategoriesStats(month, year);
+                let stats;
+                if (groupId) {
+                    stats = await groupService.getStats(groupId);
+                } else {
+                    stats = await transactionService.getCategoriesStats(month, year);
+                }
                 setData(stats);
             } catch (error) {
                 console.error(error);
             }
         };
         fetchData();
-    }, [month, year, refreshTrigger]);
+    }, [month, year, groupId, refreshTrigger]);
 
     if (data.length === 0) return null;
 
