@@ -1,0 +1,87 @@
+import React, { useEffect, useState } from 'react';
+import { transactionService } from '@/controller/transactionService';
+
+const TransactionsList = ({ refreshTrigger, filterDate }) => {
+    const [transactions, setTransactions] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const fetchTransactions = async () => {
+        try {
+            setLoading(true);
+            const data = await transactionService.getAll();
+            setTransactions(data);
+        } catch (err) {
+            setError("Impossible de charger les transactions.");
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchTransactions();
+    }, [refreshTrigger]);
+
+    const filteredTransactions = transactions.filter((t) => {
+        if (!filterDate || filterDate === 'all') return true;
+
+        const tDate = new Date(t.date);
+        const fDate = new Date(filterDate);
+
+        return tDate.getMonth() === fDate.getMonth() && 
+               tDate.getFullYear() === fDate.getFullYear();
+    });
+
+    const formatDate = (dateString) => {
+        return new Date(dateString).toLocaleDateString('fr-FR', {
+            day: 'numeric', month: 'long', year: 'numeric'
+        });
+    };
+
+    if (loading) return <div className="text-center p-4 text-gray-500">Chargement...</div>;
+    if (error) return <div className="text-center p-4 text-red-500">{error}</div>;
+    // if (transactions.length === 0) return <div className="text-center p-4 text-gray-400">Aucune transaction pour le moment.</div>;
+
+    if (filteredTransactions.length === 0) return <div className="text-center p-4 text-gray-400">Aucune transaction pour cette période.</div>;
+
+    return (
+        <div className="overflow-x-auto">
+            <table className="w-full text-left">
+                <thead className="bg-gray-50 text-gray-600 text-sm uppercase">
+                    <tr>
+                        <th className="py-3 px-4">Description</th>
+                        
+                        <th className="py-3 px-4 hidden sm:table-cell">Date</th>
+                        
+                        <th className="py-3 px-4 text-right">Montant</th>
+                    </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                    {transactions.map((t) => (
+                        <tr key={t.id} className="hover:bg-gray-50 transition">
+                            <td className="py-3 px-4 font-medium text-gray-800">
+                                {t.description}
+                                <span className="block text-xs text-gray-400 font-normal sm:hidden">
+                                    {formatDate(t.date)}
+                                </span>
+                            </td>
+                            
+                            <td className="py-3 px-4 text-gray-500 hidden sm:table-cell">
+                                {formatDate(t.date)}
+                            </td>
+                            
+                            <td className={`py-3 px-4 text-right font-bold whitespace-nowrap ${
+                                t.type === 'GAIN' ? 'text-emerald-600' : 'text-red-500'
+                            }`}>
+                                {t.type === 'GAIN' ? '+' : '-'} {t.amount.toFixed(2)} €
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
+};
+
+export default TransactionsList;

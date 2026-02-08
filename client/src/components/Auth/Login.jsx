@@ -18,10 +18,7 @@ const Login = () => {
         const success = await login(name, password);
 
         if (success) {
-            console.log("Connexion réussie !");
             navigate('/');
-        } else {
-            console.log("Échec de connexion");
         }
     };
 
