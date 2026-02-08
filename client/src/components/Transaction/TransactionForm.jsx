@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
 import { transactionService } from '@/controller/transactionService';
 
-const TransactionForm = ({ onSuccess }) => {
+const TransactionForm = ({ onSuccess, initialData = null }) => {
     const [amount, setAmount] = useState('');
     const [type, setType] = useState('DEPENSE');
     const [description, setDescription] = useState('');
@@ -11,31 +11,54 @@ const TransactionForm = ({ onSuccess }) => {
     const [date, setDate] = useState(new Date().toISOString().split('T')[0])
     const [error, setError] = useState('');
 
+    useEffect(() => {
+        if (initialData) {
+            setAmount(initialData.amount.toString());
+            setType(initialData.type);
+            setDescription(initialData.description);
+            setCategory(initialData.category);
+            setDate(new Date(initialData.date).toISOString().split('T')[0]);
+        }
+    }, [initialData]);
+
     const handleSubmit = async(e) => {
         e.preventDefault();
         setError('');
 
+        const payload = {
+            amount: parseFloat(amount),
+            type,
+            category,
+            date: new Date(date).toISOString(),
+            description
+        };
+
         try {
-            await transactionService.create({
-                amount: parseFloat(amount),
-                type,
-                category,
-                date: new Date(date).toISOString(),
-                description
-            });
+            if(initialData){
+                await transactionService.update(initialData.id, payload);
+            }else{
+                await transactionService.create(payload);
+            }
+
             if (onSuccess) {
                 onSuccess();
             }
         } catch (err) {
             console.error(err);
-            setError("Erreur lors de l'ajout de la transaction");
+            if(initialData){
+                setError("Erreur lors de l'update de la transaction");
+            }else{
+                setError("Erreur lors de l'ajout de la transaction");
+            }
         }
     };
 
     return (
         <div className="w-full bg-white p-4"> 
             <div className="text-center mb-6">
-                <h1 className="text-2xl font-bold text-gray-900">Nouvelle Transaction</h1>
+                <h1 className="text-2xl font-bold text-gray-900">
+                    {initialData ? 'Modifier la Transaction' : 'Nouvelle Transaction'}
+                </h1>
             </div>
 
             {error && <p className="text-red-500 text-center mb-4 text-sm">{error}</p>}
@@ -122,7 +145,7 @@ const TransactionForm = ({ onSuccess }) => {
                 </div>
 
                 <Button type="submit" className="w-full py-3 mt-4 text-lg">
-                    Ajouter
+                    {initialData ? 'Modifier' : 'Ajouter'}
                 </Button>
             </form>
         </div>

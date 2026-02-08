@@ -51,4 +51,13 @@ export const transactionService = {
             throw error.response?.data || { error: "Impossible de charger les catégories" };
         }
     },
+
+    update: async (id, transactionData) => {
+        try {
+            const response = await apiClient.put(`/transactions/${id}`, transactionData);
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || { error: "Erreur modification" };
+        }
+    },
 };

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import TransactionsList from './TransactionsList';
 import { transactionService } from '@/controller/transactionService';
 
-const TransactionHistory = ({ refreshTrigger }) => {
+const TransactionHistory = ({ refreshTrigger, onEdit }) => {
     const [month, setMonth] = useState(new Date().getMonth() + 1);
     const [year, setYear] = useState(new Date().getFullYear());
     
@@ -94,6 +94,7 @@ const TransactionHistory = ({ refreshTrigger }) => {
                 refreshTrigger={refreshTrigger} 
                 month={month}
                 year={year}
+                onEdit={onEdit}
             />
         </div>
     );

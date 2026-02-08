@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { transactionService } from '@/controller/transactionService';
+import { Button } from '@/components/ui/Button';
+import { Pencil } from 'lucide-react';
 
-const TransactionsList = ({ refreshTrigger, month, year }) => {
+const TransactionsList = ({ refreshTrigger, month, year, onEdit }) => {
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -44,6 +46,7 @@ const TransactionsList = ({ refreshTrigger, month, year }) => {
                         <th className="py-3 px-4">Description</th>
                         <th className="py-3 px-4 hidden sm:table-cell">Date</th>
                         <th className="py-3 px-4 text-right">Montant</th>
+                        <th className="py-3 px-4 w-10"></th>
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -64,6 +67,18 @@ const TransactionsList = ({ refreshTrigger, month, year }) => {
                                 t.type === 'GAIN' ? 'text-emerald-600' : 'text-red-500'
                             }`}>
                                 {t.type === 'GAIN' ? '+' : '-'} {t.amount.toFixed(2)} €
+                            </td>
+
+                            {/* BOUTON MODIFIER */}
+                            <td className="py-3 px-4 text-right">
+                                <Button 
+                                    variant="ghost" 
+                                    size="icon"
+                                    className="h-8 w-8 text-gray-400 hover:text-blue-600"
+                                    onClick={() => onEdit(t)}
+                                >
+                                    <Pencil className="h-4 w-4" />
+                                </Button>
                             </td>
                         </tr>
                     ))}

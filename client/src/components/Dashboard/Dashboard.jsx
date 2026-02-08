@@ -2,16 +2,28 @@ import { useState } from 'react';
 import Layout from '@/components/Layout/Layout';
 import { Button } from '@/components/ui/Button';
 import TransactionForm from '@/components/Transaction/TransactionForm';
-import TransactionsList from '@/components/Transaction/TransactionsList';
 import TransactionHistory from '@/components/Transaction/TransactionHistory';
 
 function Dashboard() {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    
     const [refreshKey, setRefreshKey] = useState(0);
+    const [editingTransaction, setEditingTransaction] = useState(null);
+
+    // AJOUT
+    const handleOpenCreate = () => {
+        setEditingTransaction(null);
+        setIsModalOpen(true);
+    };
+
+    // MODIFICATION
+    const handleOpenEdit = (transaction) => {
+        setEditingTransaction(transaction);
+        setIsModalOpen(true);
+    };
 
     const handleTransactionSuccess = () => {
         setIsModalOpen(false);
+        setEditingTransaction(null);
         setRefreshKey(prev => prev + 1);
     };
 
@@ -28,7 +40,10 @@ function Dashboard() {
                 </Button>
             </div>
 
-            <TransactionHistory refreshTrigger={refreshKey} />
+            <TransactionHistory 
+                refreshTrigger={refreshKey} 
+                onEdit={handleOpenEdit} 
+            />
 
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
@@ -43,7 +58,10 @@ function Dashboard() {
                         </Button>
 
                         <div className="p-2">
-                            <TransactionForm onSuccess={handleTransactionSuccess} />
+                            <TransactionForm 
+                                onSuccess={handleTransactionSuccess} 
+                                initialData={editingTransaction}
+                            />
                         </div>
                     </div>
                 </div>
