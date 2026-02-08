@@ -20,7 +20,7 @@ export const getAllTransactions = async (req, res) => {
 
 export const createTransaction = async (req, res) => {
     const userId = req.user.userId;
-    const { amount, type, description, category, date} = req.body;
+    const { amount, type, description, category, date, groupId} = req.body;
     try {
         const newTransaction = await prisma.transaction.create({
             data: {
@@ -30,6 +30,7 @@ export const createTransaction = async (req, res) => {
                 category: category || 'AUTRE',
                 date: date ? new Date(date) : new Date(),
                 userId: userId,
+                groupId: groupId ? parseInt(groupId) : null,
             }
         });
 
@@ -158,13 +159,14 @@ export const getExpensesByCategory = async (req, res) => {
 export const updateTransaction = async (req, res) => {
     const { id } = req.params;
     const userId = req.user.userId;
-    const { amount, type, description, category, date } = req.body;
+    const { amount, type, description, category, date, groupId } = req.body;
 
     try {
         const existingTransaction = await prisma.transaction.findFirst({
             where: {
                 id: parseInt(id),
-                userId: userId
+                userId: userId,
+                groupId: groupId ? parseInt(groupId) : null,
             }
         });
 

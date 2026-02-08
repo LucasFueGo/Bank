@@ -14,6 +14,7 @@ model User {
   createdAt DateTime @default(now())
   admin     Boolean  @default(false)
   transactions Transaction[]
+  groups       Group[]
 }
 
 model Transaction {
@@ -25,6 +26,8 @@ model Transaction {
   date        DateTime        @default(now())
   userId      Int
   user        User            @relation(fields: [userId], references: [id])
+  groupId     Int?
+  group       Group?          @relation(fields: [groupId], references: [id], onDelete: SetNull)
 }
 
 enum TransactionType {
@@ -39,4 +42,13 @@ enum TransactionCategory {
   TRANSPORT
   SALAIRE
   AUTRE
+}
+
+model Group {
+  id           Int           @id @default(autoincrement())
+  name         String
+  createdAt    DateTime      @default(now())
+  userId       Int
+  user         User          @relation(fields: [userId], references: [id])
+  transactions Transaction[]
 }
