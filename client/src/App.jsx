@@ -2,6 +2,7 @@ import { useContext } from 'react'
 import { Context } from '@/context/AuthContext';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from '@/components/Dashboard/Dashboard'
+import Stats from '@/components/Transaction/Stats'
 import Auth from '@/components/Auth/Login';
 
 function App() {
@@ -18,8 +19,12 @@ function App() {
         element={user ? <Dashboard /> : <Navigate to="/Auth" />}
       />
       <Route 
-        path="/Dashboard" 
+        path="/dashboard" 
         element={user ? <Dashboard /> : <Navigate to="/Auth" />}
+      />
+      <Route 
+        path="/stats" 
+        element={user ? <Stats /> : <Navigate to="/Auth" />}
       />
     </Routes>
   )

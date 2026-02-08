@@ -81,6 +81,12 @@ const TransactionHistory = ({ refreshTrigger }) => {
                         <span className="text-xs text-gray-500 uppercase font-medium">Dépenses</span>
                         <span className="text-red-500 font-bold text-lg">-{stats.expense.toFixed(2)} €</span>
                     </div>
+                    <div className="flex flex-col">
+                        <span className="text-xs text-gray-500 uppercase font-medium">Solde</span>
+                        <span className={`font-bold text-lg ${stats.balance >= 0 ? 'text-gray-900' : 'text-red-600'}`}>
+                            {stats.balance >= 0 ? '+' : ''}{stats.balance.toFixed(2)} €
+                        </span>
+                    </div>
                 </div>
             </div>
             

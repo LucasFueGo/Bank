@@ -107,7 +107,8 @@ export const getMonthlyStats = async (req, res) => {
 
         res.status(200).json({
             income,
-            expense
+            expense,
+            balance: income - expense
         });
 
     } catch (error) {

@@ -39,5 +39,16 @@ export const transactionService = {
         } catch (error) {
             throw error.response?.data || { error: "Erreur création" };
         }
-    }
+    },
+
+    getCategoriesStats: async (month, year) => {
+        try {
+            const response = await apiClient.get('/transactions/categories', {
+                params: { month, year }
+            });
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || { error: "Impossible de charger les catégories" };
+        }
+    },
 };

@@ -2,15 +2,16 @@ import { useContext, useState } from 'react';
 import { Context } from '@/context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
-import { Menu, X, LogOut, Gift, Users } from 'lucide-react';
+import { Menu, X, LogOut, PieChart, Users } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 function Header() {
     const { logout } = useContext(Context);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const menuItems = [
-        { label: "Dashboard", icon: Users, href: "/Dashboard" },
-        // { label: "Other", icon: Users, href: "#" },
+        { label: "Dashboard", icon: Users, href: "/" }, 
+        { label: "Statistiques", icon: PieChart, href: "/stats" }
     ];
 
     const handleLogout = () => {
@@ -31,9 +32,6 @@ function Header() {
                             animate={{ opacity: 1, x: 0 }}
                             className="flex items-center gap-2"
                         >
-                            {/* <div className="bg-red-100 p-2 rounded-full">
-                                <Gift className="text-red-600 h-5 w-5" />
-                            </div> */}
                             <h1 className="text-xl font-bold text-red-900 hidden sm:block">
                                 Bank
                             </h1>
@@ -41,14 +39,14 @@ function Header() {
 
                         <nav className="hidden md:flex items-center gap-6">
                             {menuItems.map((item, index) => (
-                                <a 
+                                <Link
                                     key={index}
-                                    href={item.href}
+                                    to={item.href}
                                     className="text-sm font-medium text-gray-600 hover:text-red-600 transition-colors flex items-center gap-2"
                                 >
                                     <item.icon className="h-4 w-4" /> 
                                     {item.label}
-                                </a>
+                                </Link>
                             ))}
                         </nav>
 
@@ -99,16 +97,16 @@ function Header() {
 
                             <nav className="flex-1 space-y-2">
                                 {menuItems.map((item, index) => (
-                                    <a 
+                                    <Link 
                                         key={index}
-                                        href={item.href} 
+                                        to={item.href} 
                                         className="flex items-center gap-3 p-3 rounded-xl hover:bg-red-50 text-gray-700 font-medium transition-all group"
                                     >
                                         <div className="bg-gray-50 group-hover:bg-white p-2 rounded-lg transition-colors">
                                             <item.icon className="h-5 w-5 text-gray-500 group-hover:text-red-600" />
                                         </div>
                                         {item.label}
-                                    </a>
+                                    </Link>
                                 ))}
                             </nav>
 
