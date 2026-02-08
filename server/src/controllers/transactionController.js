@@ -115,3 +115,41 @@ export const getMonthlyStats = async (req, res) => {
         res.status(500).json({ error: "Erreur lors du calcul des statistiques" });
     }
 };
+
+export const getExpensesByCategory = async (req, res) => {
+    const userId = req.user.userId;
+    const { month, year } = req.query;
+
+    if (!month || !year) return res.status(400).json({ error: "Mois et année requis" });
+
+    try {
+        const startDate = new Date(year, month - 1, 1);
+        const endDate = new Date(year, month, 0, 23, 59, 59);
+
+        const stats = await prisma.transaction.groupBy({
+            by: ['category'],
+            where: {
+                userId: userId,
+                type: 'DEPENSE',
+                date: {
+                    gte: startDate,
+                    lte: endDate
+                }
+            },
+            _sum: {
+                amount: true
+            }
+        });
+
+        const formattedStats = stats.map(stat => ({
+            name: stat.category,
+            value: stat._sum.amount || 0
+        })).sort((a, b) => b.value - a.value);
+
+        res.status(200).json(formattedStats);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erreur lors du calcul par catégorie" });
+    }
+};
