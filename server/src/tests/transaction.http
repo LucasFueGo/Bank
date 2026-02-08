@@ -1,4 +1,4 @@
-### 1. D'abord, on se connecte pour avoir le token
+### 
 # @name login
 POST http://localhost:3000/api/auth/login
 Content-Type: application/json
@@ -8,11 +8,11 @@ Content-Type: application/json
     "password": "MonMotDePasseSecret123!"
 }
 
-### Variable pour récupérer le token automatiquement (si l'extension le permet)
+### 
 @authToken = {{login.response.body.token}}
 
 
-### 2. Créer une transaction (Dépense)
+### Créer une transaction (Dépense)
 POST http://localhost:3000/api/transactions
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
@@ -24,7 +24,7 @@ Authorization: Bearer {{authToken}}
 }
 
 
-### 3. Créer une autre transaction (Gain)
+### Créer une transaction (Gain)
 POST http://localhost:3000/api/transactions
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
@@ -36,6 +36,15 @@ Authorization: Bearer {{authToken}}
 }
 
 
-### 4. Récupérer toutes MES transactions
+### Récupérer toutes mes transactions
 GET http://localhost:3000/api/transactions
+Authorization: Bearer {{authToken}}
+
+### Récupérer les transactions de Février 2026
+GET http://localhost:3000/api/transactions?month=2&year=2026
+Authorization: Bearer {{authToken}}
+
+
+### Récupérer les STATISTIQUES de Février 2026
+GET http://localhost:3000/api/transactions/stats?month=2&year=2026
 Authorization: Bearer {{authToken}}

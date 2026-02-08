@@ -41,3 +41,79 @@ export const createTransaction = async (req, res) => {
         res.status(500).json({ error: "Erreur lors de la création de la transaction" });
     }
 };
+
+export const getTransactions = async (req, res) => {
+    const userId = req.user.userId;
+    const { month, year } = req.query;
+
+    try {
+        let whereClause = { userId };
+
+        if (month && year) {
+            const startDate = new Date(year, month - 1, 1);
+            const endDate = new Date(year, month, 0, 23, 59, 59);
+
+            whereClause.date = {
+                gte: startDate,
+                lte: endDate
+            };
+        }
+
+        const transactions = await prisma.transaction.findMany({
+            where: whereClause,
+            orderBy: {
+                date: 'desc'
+            }
+        });
+
+        res.status(200).json(transactions);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erreur lors de la récupération des transactions" });
+    }
+};
+
+export const getMonthlyStats = async (req, res) => {
+    const userId = req.user.userId;
+    const { month, year } = req.query;
+
+    if (!month || !year) {
+        return res.status(400).json({ error: "Mois et année requis pour les statistiques" });
+    }
+
+    try {
+        const startDate = new Date(year, month - 1, 1);
+        const endDate = new Date(year, month, 0, 23, 59, 59);
+
+        const stats = await prisma.transaction.groupBy({
+            by: ['type'],
+            where: {
+                userId: userId,
+                date: {
+                    gte: startDate,
+                    lte: endDate
+                }
+            },
+            _sum: {
+                amount: true
+            }
+        });
+
+        let income = 0;
+        let expense = 0;
+
+        stats.forEach(stat => {
+            if (stat.type === 'GAIN') income = stat._sum.amount || 0;
+            if (stat.type === 'DEPENSE') expense = stat._sum.amount || 0;
+        });
+
+        res.status(200).json({
+            income,
+            expense
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erreur lors du calcul des statistiques" });
+    }
+};
