@@ -22,6 +22,7 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
+    console.log('Login')
     const { name, password } = req.body;
     if (!name || !password) return res.status(400).json({ error: "Name and password required" });
 
