@@ -9,8 +9,8 @@ function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const menuItems = [
-        // { label: "Mes Listes", icon: Gift, href: "/WishList" },
-        { label: "Other", icon: Users, href: "#" },
+        { label: "Dashboard", icon: Users, href: "/Dashboard" },
+        // { label: "Other", icon: Users, href: "#" },
     ];
 
     const handleLogout = () => {
@@ -31,9 +31,9 @@ function Header() {
                             animate={{ opacity: 1, x: 0 }}
                             className="flex items-center gap-2"
                         >
-                            <div className="bg-red-100 p-2 rounded-full">
+                            {/* <div className="bg-red-100 p-2 rounded-full">
                                 <Gift className="text-red-600 h-5 w-5" />
-                            </div>
+                            </div> */}
                             <h1 className="text-xl font-bold text-red-900 hidden sm:block">
                                 Bank
                             </h1>

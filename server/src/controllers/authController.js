@@ -14,7 +14,6 @@ export const register = async (req, res) => {
         });
 
         res.status(201).json({ 
-            message: "Utilisateur créé !", 
             user: { id: newUser.id, name: newUser.name } 
         });
     } catch (error) {
@@ -39,8 +38,7 @@ export const login = async (req, res) => {
             { expiresIn: '24h' }
         );
 
-        res.status(200).json({ 
-            message: "Connexion réussie",
+        res.status(200).json({
             token, 
             user: { id: user.id, name: user.name } 
         });

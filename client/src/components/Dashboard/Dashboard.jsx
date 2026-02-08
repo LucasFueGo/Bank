@@ -1,18 +1,16 @@
 import { useContext } from 'react';
 import Layout from '@/components/Layout/Layout';
+import AddTransaction from '../Transaction/AddTrasaction';
 
-function WishList() {
+
+function Dashboard() {
     return (
-        <Layout>
-            <h1 className="text-3xl font-bold text-red-900 mb-6">
-                Bank
-            </h1>
-            
+        <Layout>            
             <div className="bg-white p-6 rounded-xl shadow-sm border border-red-100">
-                Hello World
+                <AddTransaction/>
             </div>
         </Layout>
     )
 }
 
-export default WishList;
+export default Dashboard;

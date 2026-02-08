@@ -13,4 +13,20 @@ model User {
   name      String   @unique
   createdAt DateTime @default(now())
   admin     Boolean  @default(false)
+  transactions Transaction[]
+}
+
+model Transaction {
+  id          Int             @id @default(autoincrement())
+  amount      Float
+  type        TransactionType
+  description String
+  date        DateTime        @default(now())
+  userId      Int
+  user        User            @relation(fields: [userId], references: [id])
+}
+
+enum TransactionType {
+  GAIN
+  DEPENSE
 }

@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { Context } from '@/context/AuthContext';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import WishList from '@/components/Dashboard/WishList'
+import Dashboard from '@/components/Dashboard/Dashboard'
 import Auth from '@/components/Auth/Login';
 
 function App() {
@@ -15,11 +15,11 @@ function App() {
       />
       <Route 
         path="/" 
-        element={user ? <WishList /> : <Navigate to="/Auth" />}
+        element={user ? <Dashboard /> : <Navigate to="/Auth" />}
       />
       <Route 
-        path="/WishList" 
-        element={user ? <WishList /> : <Navigate to="/Auth" />}
+        path="/Dashboard" 
+        element={user ? <Dashboard /> : <Navigate to="/Auth" />}
       />
     </Routes>
   )
