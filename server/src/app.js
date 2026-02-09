@@ -25,8 +25,6 @@ app.use(cors({
         if (isAllowed) {
             callback(null, true);
         } else {
-            console.log("🚫 BLOQUÉ PAR CORS. Origine reçue :", origin);
-            console.log("✅ Origines acceptées :", allowedOrigins);
             callback(new Error('Not allowed by CORS'));
         }
     },
@@ -34,6 +32,15 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+app.get('/ping', async (req, res) => {
+    try {
+        await prisma.$queryRaw`SELECT 1`;
+        res.status(200).send('pong & db alive');
+    } catch (error) {
+        res.status(200).send('pong (db error)'); 
+    }
+});
 
 app.use(express.json());
 

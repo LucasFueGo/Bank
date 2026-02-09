@@ -22,28 +22,14 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-    console.log('Login')
-
-    console.log('Body reçu :', req.body);
-
     const { name, password } = req.body;
-    if (!name || !password){
-        console.log('Erreur : Nom ou mot de passe manquant');
-        return res.status(400).json({ error: "Name and password required" });
-    }
+    if (!name || !password) return res.status(400).json({ error: "Name and password required" });
 
     try {
-        console.log('Tentative de connexion Prisma...');
         const user = await prisma.user.findUnique({ where: { name } });
-        console.log('Résultat Prisma (User) :', user);
-
-        if (!user){
-            console.log('Utilisateur introuvable');
-            return res.status(404).json({ error: "incorrect name/password" });
-        } 
+        if (!user) return res.status(404).json({ error: "incorrect name/password" }); 
 
         const isMatch = await bcrypt.compare(password, user.password);
-        console.log('isMatch ', isMatch)
         if (!isMatch) return res.status(401).json({ error: "incorrect name/password" });
 
         const token = jwt.sign(
@@ -52,14 +38,11 @@ export const login = async (req, res) => {
             { expiresIn: '24h' }
         );
 
-        console.log('token ', token)
-
         res.status(200).json({
             token, 
             user: { id: user.id, name: user.name } 
         });
     } catch (error) {
-        console.error("ERREUR CRITIQUE DANS LOGIN :", error);
         res.status(500).json({ error: "Erreur serveur" });
     }
 };
