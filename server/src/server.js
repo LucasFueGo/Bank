@@ -2,10 +2,9 @@ import app from './app.js';
 
 const PORT = process.env.PORT || 3000;
 
-const SERVER_URL = process.env.JWT_SECRET;
+const SERVER_URL = process.env.SERVER_URL;
 
 app.listen(PORT, () => {
-    console.log(`Serveur lancé sur http://localhost:${PORT}`);
     const interval = 14 * 60 * 1000; 
 
     setInterval(() => {        
