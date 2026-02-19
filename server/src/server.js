@@ -10,7 +10,7 @@ app.listen(PORT, () => {
     setInterval(() => {        
         fetch(`${SERVER_URL}/ping`)
             .then(response => {
-                console.log(`Ping réussi ${response.status})`);
+                console.log(`Ping réussi ${response.status}`);
             })
             .catch(error => {
                 console.error(`Ping raté ${error.message}`);
