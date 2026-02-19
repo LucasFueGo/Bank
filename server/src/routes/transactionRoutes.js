@@ -14,12 +14,13 @@ const router = express.Router();
 
 router.use(authenticateToken);
 
-router.get('/all', getAllTransactions);
-router.get('/', getTransactions);
-router.get('/:id', getTransactionById);
 router.get('/stats', getMonthlyStats);
 router.get('/categories', getExpensesByCategory);
+router.get('/all', getAllTransactions);
+router.get('/', getTransactions);
 router.post('/', createTransaction);
+
+router.get('/:id', getTransactionById);
 router.put('/:id', updateTransaction);
 
 
