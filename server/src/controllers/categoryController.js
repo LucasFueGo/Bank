@@ -5,10 +5,10 @@ export const createCategory = async (req, res) => {
     const { name } = req.body;
 
     try {
-        const group = await prisma.group.create({
+        const category = await prisma.category.create({
             data: { name, userId }
         });
-        res.status(201).json(group);
+        res.status(201).json(category);
     } catch (error) {
         res.status(500).json({ error: "Erreur création catégorie" });
     }
@@ -18,7 +18,7 @@ export const getCategories = async (req, res) => {
     const userId = req.user.userId;
 
     try {
-        const categories = await prisma.group.findMany({
+        const categories = await prisma.category.findMany({
             where: { userId },
             include: {
                 transactions: true
@@ -36,7 +36,7 @@ export const getCategoryById = async (req, res) => {
     const userId = req.user.userId;
 
     try {
-        const category = await prisma.group.findFirst({
+        const category = await prisma.category.findFirst({
             where: { id: parseInt(id), userId },
         });
 

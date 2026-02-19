@@ -49,6 +49,6 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/groups', groupRoutes);
-app.use('api/categories', categoryRoutes)
+app.use('/api/categories', categoryRoutes)
 
 export default app;

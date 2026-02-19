@@ -3,15 +3,17 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
 import { transactionService } from '@/controller/transactionService';
 import { groupService } from '@/controller/groupService';
+import { categoryService } from '@/controller/categoryService';
 
 const TransactionForm = ({ onSuccess, initialData = null }) => {
     const [amount, setAmount] = useState('');
     const [type, setType] = useState('DEPENSE');
     const [description, setDescription] = useState('');
-    const [category, setCategory] = useState('AUTRE');
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [groupId, setGroupId] = useState('');
     const [groups, setGroups] = useState([]);
+    const [categoryId, setCategoryId] = useState('AUTRE');
+    const [categories, setCategories] = useState([]);
     const [error, setError] = useState('');
 
     useEffect(() => {
@@ -25,13 +27,26 @@ const TransactionForm = ({ onSuccess, initialData = null }) => {
     }, []);
 
     useEffect(() => {
+        const loadCategories = async () => {
+            try {
+                const data = await categoryService.getAll();
+                setCategories(data);
+                if (!initialData && data.length > 0) {
+                    setCategoryId(data[0].id.toString()); 
+                }
+            } catch (err) { console.error(err); }
+        };
+        loadCategories();
+    }, []);
+
+    useEffect(() => {
         if (initialData) {
             setAmount(initialData.amount.toString());
             setType(initialData.type);
             setDescription(initialData.description);
-            setCategory(initialData.category);
             setDate(new Date(initialData.date).toISOString().split('T')[0]);
             setGroupId(initialData.groupId ? initialData.groupId.toString() : '');
+            setCategoryId(initialData.categoryId ? initialData.categoryId.toString() : '');
         }
     }, [initialData]);
 
@@ -42,7 +57,7 @@ const TransactionForm = ({ onSuccess, initialData = null }) => {
         const payload = {
             amount: parseFloat(amount),
             type,
-            category,
+            categoryId: parseInt(categoryId),
             date: new Date(date).toISOString(),
             description,
             groupId: groupId ? parseInt(groupId) : null
@@ -131,16 +146,17 @@ const TransactionForm = ({ onSuccess, initialData = null }) => {
                         Catégorie
                     </label>
                     <select 
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
+                        value={categoryId}
+                        onChange={(e) => setCategoryId(e.target.value)}
+                        required
                         className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-primary outline-none bg-white"
                     >
-                        <option value="NOURRITURE">Nourriture</option>
-                        <option value="LOISIR">Loisir</option>
-                        <option value="JEU">Jeu</option>
-                        <option value="TRANSPORT">Transport</option>
-                        <option value="SALAIRE">Salaire</option>
-                        <option value="AUTRE">Autre</option>
+                        {categories.length === 0 && <option value="">Chargement...</option>}
+                        {categories.map(cat => (
+                            <option key={cat.id} value={cat.id}>
+                                {cat.name}
+                            </option>
+                        ))}
                     </select>
                 </div>
 
