@@ -41,6 +41,7 @@ enum TransactionCategory {
   JEU
   TRANSPORT
   SALAIRE
+  CADEAU
   AUTRE
 }
 
