@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { transactionService } from '@/controller/transactionService';
 import { Button } from '@/components/ui/Button';
 import { Pencil } from 'lucide-react';
 
 const TransactionsList = ({ refreshTrigger, month, year, onEdit }) => {
+    const navigate = useNavigate();
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -51,7 +53,7 @@ const TransactionsList = ({ refreshTrigger, month, year, onEdit }) => {
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                     {transactions.map((t) => (
-                        <tr key={t.id} className="hover:bg-gray-50 transition">
+                        <tr key={t.id} className="hover:bg-gray-50 transition" Click={() => navigate(`/transaction/${t.id}`)}>
                             <td className="py-3 px-4 font-medium text-gray-800">
                                 {t.description}
                                 <span className="block text-xs text-gray-400 font-normal sm:hidden">
@@ -75,7 +77,10 @@ const TransactionsList = ({ refreshTrigger, month, year, onEdit }) => {
                                     variant="ghost" 
                                     size="icon"
                                     className="h-8 w-8 text-gray-400 hover:text-blue-600"
-                                    onClick={() => onEdit(t)}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onEdit(t);
+                                    }}
                                 >
                                     <Pencil className="h-4 w-4" />
                                 </Button>
