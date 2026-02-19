@@ -22,15 +22,14 @@ model Transaction {
   id          Int             @id @default(autoincrement())
   amount      Float
   type        TransactionType
-  category    TransactionCategory @default(AUTRE)
   description String
   date        DateTime        @default(now())
   userId      Int
   user        User            @relation(fields: [userId], references: [id])
   groupId     Int?
   group       Group?          @relation(fields: [groupId], references: [id], onDelete: SetNull)
-  categoryId  Int?
-  categories  Category? @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  categoryId  Int
+  categories  Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
 }
 
 enum TransactionType {
