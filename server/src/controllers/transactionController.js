@@ -72,6 +72,33 @@ export const getTransactions = async (req, res) => {
     }
 };
 
+export const getTransactionById = async (req, res) => {
+    const { id } = req.params;
+    const userId = req.user.userId;
+
+    try {
+        const transaction = await prisma.transaction.findFirst({
+            where: { 
+                id: parseInt(id), 
+                userId: userId 
+            },
+            include: {
+                category: true,
+                group: true
+            }
+        });
+
+        if (!transaction) {
+            return res.status(404).json({ error: "Transaction introuvable" });
+        }
+
+        res.status(200).json(transaction);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erreur lors de la récupération de la transaction" });
+    }
+};
+
 export const getMonthlyStats = async (req, res) => {
     const userId = req.user.userId;
     const { month, year } = req.query;
