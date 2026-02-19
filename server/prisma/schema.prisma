@@ -15,24 +15,34 @@ model User {
   admin     Boolean  @default(false)
   transactions Transaction[]
   groups       Group[]
+  categories   Category[]
 }
 
 model Transaction {
   id          Int             @id @default(autoincrement())
   amount      Float
   type        TransactionType
-  category    TransactionCategory @default(AUTRE)
   description String
   date        DateTime        @default(now())
   userId      Int
   user        User            @relation(fields: [userId], references: [id])
   groupId     Int?
   group       Group?          @relation(fields: [groupId], references: [id], onDelete: SetNull)
+  categoryId  Int
+  categories  Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
 }
 
 enum TransactionType {
   GAIN
   DEPENSE
+}
+
+model Category {
+  id           Int           @id @default(autoincrement())
+  name         String
+  userId       Int
+  user         User          @relation(fields: [userId], references: [id])
+  transactions Transaction[]
 }
 
 enum TransactionCategory {
@@ -41,6 +51,7 @@ enum TransactionCategory {
   JEU
   TRANSPORT
   SALAIRE
+  CADEAU
   AUTRE
 }
 

@@ -72,7 +72,7 @@ export const getGroupStats = async (req, res) => {
         if (!group) return res.status(404).json({ error: "Groupe introuvable" });
 
         const stats = await prisma.transaction.groupBy({
-            by: ['category'],
+            by: ['categoryId'],
             where: {
                 groupId: parseInt(id),
                 type: 'DEPENSE'
@@ -80,10 +80,18 @@ export const getGroupStats = async (req, res) => {
             _sum: { amount: true }
         });
 
-        const formattedStats = stats.map(stat => ({
-            name: stat.category,
-            value: stat._sum.amount || 0
-        })).sort((a, b) => b.value - a.value);
+        const categoryIds = stats.map(s => s.categoryId).filter(id => id !== null);
+        const categories = await prisma.category.findMany({
+            where: { id: { in: categoryIds } }
+        });
+
+        const formattedStats = stats.map(stat => {
+            const categoryObj = categories.find(c => c.id === stat.categoryId);
+            return {
+                name: categoryObj ? categoryObj.name : 'Inconnue',
+                value: stat._sum.amount || 0
+            };
+        }).sort((a, b) => b.value - a.value);
 
         res.json(formattedStats);
     } catch (error) {
