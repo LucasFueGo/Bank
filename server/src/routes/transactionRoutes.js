@@ -1,7 +1,8 @@
 import express from 'express';
 import { 
     getAllTransactions, 
-    getTransactions, 
+    getTransactions,
+    getTransactionById,
     getMonthlyStats, 
     createTransaction,
     getExpensesByCategory,
@@ -13,11 +14,13 @@ const router = express.Router();
 
 router.use(authenticateToken);
 
-router.get('/all', getAllTransactions);
-router.get('/', getTransactions);
 router.get('/stats', getMonthlyStats);
 router.get('/categories', getExpensesByCategory);
+router.get('/all', getAllTransactions);
+router.get('/', getTransactions);
 router.post('/', createTransaction);
+
+router.get('/:id', getTransactionById);
 router.put('/:id', updateTransaction);
 
 

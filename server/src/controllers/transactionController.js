@@ -72,6 +72,33 @@ export const getTransactions = async (req, res) => {
     }
 };
 
+export const getTransactionById = async (req, res) => {
+    const { id } = req.params;
+    const userId = req.user.userId;
+
+    try {
+        const transaction = await prisma.transaction.findFirst({
+            where: { 
+                id: parseInt(id), 
+                userId: userId 
+            },
+            include: {
+                category: true,
+                group: true
+            }
+        });
+
+        if (!transaction) {
+            return res.status(404).json({ error: "Transaction introuvable" });
+        }
+
+        res.status(200).json(transaction);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erreur lors de la récupération de la transaction" });
+    }
+};
+
 export const getMonthlyStats = async (req, res) => {
     const userId = req.user.userId;
     const { month, year } = req.query;
@@ -129,24 +156,27 @@ export const getExpensesByCategory = async (req, res) => {
         const endDate = new Date(year, month, 0, 23, 59, 59);
 
         const stats = await prisma.transaction.groupBy({
-            by: ['category'],
+            by: ['categoryId'],
             where: {
                 userId: userId,
                 type: 'DEPENSE',
-                date: {
-                    gte: startDate,
-                    lte: endDate
-                }
+                date: { gte: startDate, lte: endDate }
             },
-            _sum: {
-                amount: true
-            }
+            _sum: { amount: true }
         });
 
-        const formattedStats = stats.map(stat => ({
-            name: stat.category,
-            value: stat._sum.amount || 0
-        })).sort((a, b) => b.value - a.value);
+        const categoryIds = stats.map(s => s.categoryId).filter(id => id !== null);
+        const categories = await prisma.category.findMany({
+            where: { id: { in: categoryIds } }
+        });
+
+        const formattedStats = stats.map(stat => {
+            const categoryObj = categories.find(c => c.id === stat.categoryId);
+            return {
+                name: categoryObj ? categoryObj.name : 'Inconnue',
+                value: stat._sum.amount || 0
+            };
+        }).sort((a, b) => b.value - a.value);
 
         res.status(200).json(formattedStats);
 
@@ -159,7 +189,8 @@ export const getExpensesByCategory = async (req, res) => {
 export const updateTransaction = async (req, res) => {
     const { id } = req.params;
     const userId = req.user.userId;
-    const { amount, type, description, category, date, groupId } = req.body;
+    
+    const { amount, type, description, categoryId, date, groupId } = req.body;
 
     try {
         const existingTransaction = await prisma.transaction.findFirst({
@@ -181,7 +212,7 @@ export const updateTransaction = async (req, res) => {
                 amount: parseFloat(amount),
                 type,
                 description,
-                category,
+                categoryId: parseInt(categoryId), 
                 date: date ? new Date(date) : undefined,
                 groupId: groupId ? parseInt(groupId) : null
             }
