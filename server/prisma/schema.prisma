@@ -29,7 +29,7 @@ model Transaction {
   groupId     Int?
   group       Group?          @relation(fields: [groupId], references: [id], onDelete: SetNull)
   categoryId  Int
-  categories  Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  category  Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
 }
 
 enum TransactionType {

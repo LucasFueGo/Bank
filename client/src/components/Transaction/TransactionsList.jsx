@@ -53,7 +53,7 @@ const TransactionsList = ({ refreshTrigger, month, year, onEdit }) => {
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                     {transactions.map((t) => (
-                        <tr key={t.id} className="hover:bg-gray-50 transition" Click={() => navigate(`/transaction/${t.id}`)}>
+                        <tr key={t.id} className="hover:bg-gray-50 transition cursor-pointer" onClick={() => navigate(`/transaction/${t.id}`)}>
                             <td className="py-3 px-4 font-medium text-gray-800">
                                 {t.description}
                                 <span className="block text-xs text-gray-400 font-normal sm:hidden">
