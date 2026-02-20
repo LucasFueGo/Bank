@@ -54,7 +54,7 @@ const CategoryChart = ({ month, year, groupId, refreshTrigger }) => {
                 </ResponsiveContainer>
             </div>
 
-            {/* LISTE / LÉGENDE */}
+            {/* LÉGENDE */}
             <div className="w-full sm:w-1/2 space-y-3">
                 <h3 className="text-gray-700 font-semibold mb-4">Dépenses par catégorie</h3>
                 {data.map((entry, index) => (
