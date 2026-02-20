@@ -12,7 +12,7 @@ const TransactionForm = ({ onSuccess, initialData = null }) => {
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [groupId, setGroupId] = useState('');
     const [groups, setGroups] = useState([]);
-    const [categoryId, setCategoryId] = useState('AUTRE');
+    const [categoryId, setCategoryId] = useState();
     const [categories, setCategories] = useState([]);
     const [error, setError] = useState('');
 
