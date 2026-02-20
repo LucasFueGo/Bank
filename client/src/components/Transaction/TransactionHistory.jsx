@@ -1,29 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { DateContext } from '@/context/DateContext';
 import TransactionsList from './TransactionsList';
 import { transactionService } from '@/controller/transactionService';
 
 const TransactionHistory = ({ refreshTrigger, onEdit }) => {
-    const [month, setMonth] = useState(new Date().getMonth() + 1);
-    const [year, setYear] = useState(new Date().getFullYear());
-    
+    const { month, setMonth, year, setYear, months, years } = useContext(DateContext);
     const [stats, setStats] = useState({ income: 0, expense: 0, balance: 0 });
-
-    const years = Array.from({ length: 5 }, (_, i) => 2024 + i);
-    
-    const months = [
-        { value: 1, label: 'Janvier' },
-        { value: 2, label: 'Février' },
-        { value: 3, label: 'Mars' },
-        { value: 4, label: 'Avril' },
-        { value: 5, label: 'Mai' },
-        { value: 6, label: 'Juin' },
-        { value: 7, label: 'Juillet' },
-        { value: 8, label: 'Août' },
-        { value: 9, label: 'Septembre' },
-        { value: 10, label: 'Octobre' },
-        { value: 11, label: 'Novembre' },
-        { value: 12, label: 'Décembre' },
-    ];
 
     useEffect(() => {
         const fetchStats = async () => {

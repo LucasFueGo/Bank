@@ -8,9 +8,14 @@ import GroupsList from './components/Group/GroupsList';
 import GroupDetail from './components/Group/GroupDetail';
 import GroupStats from './components/Group/GroupStats';
 import TransactionDetail from './components/Transaction/TransactionDetail'
+import Loader from './components/ui/Loader';
 
 function App() {
-  const { user } = useContext(Context);
+  const { user, loading } = useContext(Context);
+
+  if(loading){
+    return <Loader />;
+  }
 
   return (
     <Routes>
