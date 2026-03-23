@@ -224,3 +224,42 @@ export const updateTransaction = async (req, res) => {
         res.status(500).json({ error: "Erreur lors de la modification" });
     }
 };
+
+
+export const search = async(req, res) => {
+    const userId = req.user.userId;
+    const searchQuery = req.params.search;
+
+    if (!searchQuery) {
+        return res.status(400).json({ error: "Le terme de recherche est manquant" });
+    }
+
+    try {
+        const transactions = await prisma.transaction.findMany({
+            where: {
+                userId: userId,
+                OR: [
+                    {
+                        description: {
+                            contains: searchQuery,
+                            mode: 'insensitive'
+                        }
+                    }
+                ]
+            },
+            orderBy: {
+                date: 'desc'
+            },
+            include: {
+                category: true,
+                group: true
+            }
+        });
+
+        res.status(200).json(transactions);
+
+    } catch (error) {
+        console.error("Erreur dans search:", error);
+        res.status(500).json({ error: "Erreur lors de la recherche des transactions" });
+    }
+}

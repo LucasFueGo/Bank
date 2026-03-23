@@ -4,7 +4,7 @@ import { transactionService } from '@/controller/transactionService';
 import { Button } from '@/components/ui/Button';
 import { Pencil } from 'lucide-react';
 
-const TransactionsList = ({ refreshTrigger, month, year, onEdit }) => {
+const TransactionsList = ({ refreshTrigger, month, year, onEdit, data=false }) => {
     const navigate = useNavigate();
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -27,7 +27,11 @@ const TransactionsList = ({ refreshTrigger, month, year, onEdit }) => {
     };
 
     useEffect(() => {
-        fetchTransactions();
+        if(!data){
+            fetchTransactions();
+        } else {
+            setTransactions(data)
+        }
     }, [refreshTrigger, month, year]);
 
     const formatDate = (dateString) => {
