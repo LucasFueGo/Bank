@@ -69,4 +69,14 @@ export const transactionService = {
             throw error.response?.data || { error: "Erreur modification" };
         }
     },
+
+    search: async (search) => {
+        try{
+            const encodedSearch = encodeURIComponent(search);
+            const response = await apiClient.get(`/transactions/search/${encodedSearch}`);
+            return response.data;
+        }catch(error) {
+            throw error.response?.data || { error: "Erreur recherche" };
+        }
+    }
 };
