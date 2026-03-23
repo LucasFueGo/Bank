@@ -6,7 +6,8 @@ import {
     getMonthlyStats, 
     createTransaction,
     getExpensesByCategory,
-    updateTransaction
+    updateTransaction,
+    search
 } from '../controllers/transactionController.js';
 import { authenticateToken } from '../middleware/authMiddleware.js';
 
@@ -17,6 +18,8 @@ router.use(authenticateToken);
 router.get('/stats', getMonthlyStats);
 router.get('/categories', getExpensesByCategory);
 router.get('/all', getAllTransactions);
+router.get('/search/:search', search);
+
 router.get('/', getTransactions);
 router.post('/', createTransaction);
 

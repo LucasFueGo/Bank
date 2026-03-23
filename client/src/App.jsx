@@ -9,6 +9,7 @@ import GroupDetail from './components/Group/GroupDetail';
 import GroupStats from './components/Group/GroupStats';
 import TransactionDetail from './components/Transaction/TransactionDetail'
 import Loader from './components/ui/Loader';
+import Search from './components/Search/Search';
 
 function App() {
   const { user, loading } = useContext(Context);
@@ -51,6 +52,11 @@ function App() {
       <Route 
         path="/transaction/:id" 
         element={user ? <TransactionDetail /> : <Navigate to="/Auth" />} 
+      />
+
+      <Route
+        path='/search'
+        element={user ? <Search /> : <Navigate to='/Auth' />}
       />
     </Routes>
   )

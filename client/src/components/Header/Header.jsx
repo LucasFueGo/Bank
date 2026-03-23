@@ -12,7 +12,8 @@ function Header() {
     const menuItems = [
         { label: "Dashboard", icon: Users, href: "/" }, 
         { label: "Statistiques", icon: PieChart, href: "/stats" },
-        { label: "Groupes", icon: Folder, href: "/groups" }
+        { label: "Groupes", icon: Folder, href: "/groups" },
+        { label: "Search", icon: Folder, href: "/search" }
     ];
 
     const handleLogout = () => {
