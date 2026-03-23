@@ -229,7 +229,6 @@ export const updateTransaction = async (req, res) => {
 export const search = async(req, res) => {
     const userId = req.user.userId;
     const searchQuery = req.params.search;
-    console.log('ICI')
 
     if (!searchQuery) {
         return res.status(400).json({ error: "Le terme de recherche est manquant" });
