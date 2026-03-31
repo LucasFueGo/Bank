@@ -3,7 +3,8 @@ import {
     getAllTransactions, 
     getTransactions,
     getTransactionById,
-    getMonthlyStats, 
+    getMonthlyStats,
+    getYearStats,
     createTransaction,
     getExpensesByCategory,
     updateTransaction,
@@ -12,13 +13,14 @@ import {
 import { authenticateToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
-
 router.use(authenticateToken);
 
-router.get('/stats', getMonthlyStats);
+
 router.get('/categories', getExpensesByCategory);
 router.get('/all', getAllTransactions);
 router.get('/search/:search', search);
+router.get('/stats/month', getMonthlyStats);
+router.get('/stats/year', getYearStats);
 
 router.get('/', getTransactions);
 router.post('/', createTransaction);
