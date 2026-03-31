@@ -1,10 +1,12 @@
 import { useState, useContext } from "react";
+import { useNavigate } from 'react-router-dom';
 import Layout from '@/components/Layout/Layout';
 import { Button } from '@/components/ui/Button';
 import { transactionService } from '@/controller/transactionService';
 
 
 const Search = ({}) => {
+    const navigate = useNavigate();
     const [search, setSearch] = useState('')
     const [results, setResults] = useState(null);
     const [isLoading, setIsLoading] = useState(false);

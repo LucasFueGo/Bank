@@ -3,20 +3,16 @@ import {
     getAllTransactions, 
     getTransactions,
     getTransactionById,
-    getMonthlyStats, 
     createTransaction,
-    getExpensesByCategory,
     updateTransaction,
     search
 } from '../controllers/transactionController.js';
 import { authenticateToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
-
 router.use(authenticateToken);
 
-router.get('/stats', getMonthlyStats);
-router.get('/categories', getExpensesByCategory);
+
 router.get('/all', getAllTransactions);
 router.get('/search/:search', search);
 

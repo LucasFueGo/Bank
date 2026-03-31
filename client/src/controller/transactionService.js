@@ -50,17 +50,6 @@ export const transactionService = {
         }
     },
 
-    getCategoriesStats: async (month, year) => {
-        try {
-            const response = await apiClient.get('/transactions/categories', {
-                params: { month, year }
-            });
-            return response.data;
-        } catch (error) {
-            throw error.response?.data || { error: "Impossible de charger les catégories" };
-        }
-    },
-
     update: async (id, transactionData) => {
         try {
             const response = await apiClient.put(`/transactions/${id}`, transactionData);

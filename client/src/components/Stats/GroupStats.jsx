@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '@/components/Layout/Layout';
 import { groupService } from '@/controller/groupService';
 import { Button } from '@/components/ui/Button';
-import CategoryChart from '@/components/Transaction/CategoryChart';
+import CategoryChart from '@/components/Stats/CategoryChart';
 import { ArrowLeft } from 'lucide-react';
 
 const GroupStats = () => {
