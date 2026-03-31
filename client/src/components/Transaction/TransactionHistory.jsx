@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { DateContext } from '@/context/DateContext';
 import TransactionsList from './TransactionsList';
-import { transactionService } from '@/controller/transactionService';
+import { statsService } from '@/controller/statsService';
 
 const TransactionHistory = ({ refreshTrigger, onEdit }) => {
     const { month, setMonth, year, setYear, months, years } = useContext(DateContext);
@@ -10,7 +10,7 @@ const TransactionHistory = ({ refreshTrigger, onEdit }) => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const data = await transactionService.getStats(month, year);
+                const data = await statsService.getMonthlyStats(month, year);
                 setStats(data);
             } catch (error) {
                 console.error("Erreur chargement stats:", error);

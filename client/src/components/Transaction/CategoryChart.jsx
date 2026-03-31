@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
+import { DateContext } from '@/context/DateContext';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import { transactionService } from '@/controller/transactionService';
+import { statsService } from '@/controller/statsService';
 import { groupService } from '@/controller/groupService';
+import { VIEW_MODES } from '@/context/DatesModes'
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
 
-const CategoryChart = ({ month, year, groupId, refreshTrigger }) => {
+const CategoryChart = ({groupId}) => {
+    const { month, year, viewMode} = useContext(DateContext);
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -15,7 +18,11 @@ const CategoryChart = ({ month, year, groupId, refreshTrigger }) => {
                 if (groupId) {
                     stats = await groupService.getStats(groupId);
                 } else {
-                    stats = await transactionService.getCategoriesStats(month, year);
+                    if(viewMode === VIEW_MODES.MONTH){
+                        stats = await statsService.getCategoriesStats(month, year);
+                    } else {
+                        stats = await statsService.getCategoriesStats(null, year);
+                    }
                 }
                 setData(stats);
             } catch (error) {
@@ -23,12 +30,12 @@ const CategoryChart = ({ month, year, groupId, refreshTrigger }) => {
             }
         };
         fetchData();
-    }, [month, year, groupId, refreshTrigger]);
+    }, [month, year, groupId, viewMode]);
 
     if (data.length === 0) return null;
 
     return (
-        <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-8">
+        <div className="p-6 flex flex-col sm:flex-row items-center justify-between gap-8">
             
             {/* GRAPHIQUE */}
             <div className="w-full sm:w-1/2 h-64">

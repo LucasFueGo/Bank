@@ -74,7 +74,6 @@ const TransactionForm = ({ onSuccess, initialData = null }) => {
                 onSuccess();
             }
         } catch (err) {
-            console.error(err);
             if(initialData){
                 setError("Erreur lors de l'update de la transaction");
             }else{

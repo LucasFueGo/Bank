@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { VIEW_MODES } from './DatesModes'
 
 const DateContext = React.createContext(null);
 
@@ -22,13 +23,17 @@ const DateProvider = ({ children }) => {
         { value: 12, label: 'Décembre' },
     ];
 
+    const [viewMode, setViewMode] = useState(VIEW_MODES.MONTH);
+
     const exposedValue = {
         month,
         setMonth,
         year,
         setYear,
         months,
-        years
+        years,
+        viewMode,
+        setViewMode
     };
 
     return (
