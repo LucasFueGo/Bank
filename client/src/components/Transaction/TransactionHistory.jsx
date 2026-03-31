@@ -1,8 +1,7 @@
 import { useContext } from 'react';
 import { DateContext } from '@/context/DateContext';
 import TransactionsList from '@/components/Transaction/TransactionsList';
-import GlobaleStats from '@/components/Transaction/GlobaleStats';
-import { VIEW_MODES } from '@/context/DatesModes'
+import GlobaleStats from '@/components/Stats/GlobaleStats';
 
 const TransactionHistory = ({ refreshTrigger, onEdit }) => {
     const { month, year, viewMode } = useContext(DateContext);

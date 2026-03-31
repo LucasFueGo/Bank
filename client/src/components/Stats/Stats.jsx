@@ -1,9 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { DateContext } from '@/context/DateContext';
 import Layout from '@/components/Layout/Layout';
-import CategoryChart from '@/components/Transaction/CategoryChart';
-import GlobaleStats from '@/components/Transaction/GlobaleStats';
-import { statsService } from '@/controller/statsService';
+import CategoryChart from '@/components/Stats/CategoryChart';
+import GlobaleStats from '@/components/Stats/GlobaleStats';
 
 const Stats = () => {
     const { month, setMonth, year, setYear, months, years, viewMode, setViewMode } = useContext(DateContext);  

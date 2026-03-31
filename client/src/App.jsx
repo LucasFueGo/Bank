@@ -6,7 +6,7 @@ import Stats from '@/components/Transaction/Stats'
 import Auth from '@/components/Auth/Login';
 import GroupsList from './components/Group/GroupsList';
 import GroupDetail from './components/Group/GroupDetail';
-import GroupStats from './components/Group/GroupStats';
+import GroupStats from './components/Stats/GroupStats';
 import TransactionDetail from './components/Transaction/TransactionDetail'
 import Loader from './components/ui/Loader';
 import Search from './components/Search/Search';
