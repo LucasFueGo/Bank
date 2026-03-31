@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { Context } from '@/context/AuthContext';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from '@/components/Dashboard/Dashboard'
-import Stats from '@/components/Transaction/Stats'
+import Stats from '@/components/Stats/Stats'
 import Auth from '@/components/Auth/Login';
 import GroupsList from './components/Group/GroupsList';
 import GroupDetail from './components/Group/GroupDetail';
